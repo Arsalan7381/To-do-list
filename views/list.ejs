@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        function validateForm() {
+            const input = document.forms["todoForm"]["ele1"].value;
+            if (!input.trim()) {
+                alert("Please enter a task!");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <header class="box" id="heading">
+        <h1>Todo List</h1>
+    </header>
+
+    <div class="box">
+        <form name="todoForm" action="/add" method="POST" onsubmit="return validateForm();">
+            <input type="text" name="ele1" placeholder="Enter the task">
+            <select name="priority">
+                <option>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+            </select>
+            <button type="submit">+</button>
+        </form>
+
+        <form method="GET" action="/">
+            <select name="priority" onchange="this.form.submit()">
+                <option<%= filter === "All" ? ' selected' : '' %>>All</option>
+                <option<%= filter === "Low" ? ' selected' : '' %>>Low</option>
+                <option<%= filter === "Medium" ? ' selected' : '' %>>Medium</option>
+                <option<%= filter === "High" ? ' selected' : '' %>>High</option>
+            </select>
+        </form>
+    </div>
+
+    <div class="box">
+        <% items.forEach(function(item) { %>
+            <div class="item">
+                <input type="checkbox">
+                <form action="/edit" method="POST" style="display:inline;">
+                    <input type="hidden" name="id" value="<%= item.id %>">
+                    <input type="text" name="newText" value="<%= item.text %>" style="width:200px;">
+                    <button type="submit">✏️</button>
+                </form>
+                <form action="/delete" method="POST" style="display:inline;">
+                    <input type="hidden" name="id" value="<%= item.id %>">
+                    <button type="submit">🗑️</button>
+                </form>
+                <span style="margin-left:auto; padding: 0 10px; color: grey;"><%= item.priority %></span>
+            </div>
+        <% }); %>
+    </div>
+
+    <footer class="box" style="text-align:center;">
+        <p>&copy; 2025 Todo List App</p>
+    </footer>
+</body>
+</html>
